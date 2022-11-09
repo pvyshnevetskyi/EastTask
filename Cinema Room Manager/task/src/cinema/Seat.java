@@ -17,6 +17,9 @@ public class Seat {
     public void setAvailable(String available) {
         this.available = available;
     }
+    public String getAvailable() {
+        return available;
+    }
 
     public int getPrice() {
         return price;

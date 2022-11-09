@@ -1,5 +1,6 @@
 package cinema;
 
+import javax.swing.text.html.ImageView;
 import java.util.Scanner;
 
 public class CinemaRoom {
@@ -7,11 +8,15 @@ public class CinemaRoom {
     private int numberOfRows;
     private int numberOfSeats;
     public Seat[][] movieHall;
+    private int currentIncome = 0;
+    private int numOfPurchasedTickets = 0;
+
     public CinemaRoom(int numberOfRows, int numberOfSeats) {
         this.numberOfRows = numberOfRows;
         this.numberOfSeats = numberOfSeats;
         movieHall = new Seat[numberOfSeats + 1][numberOfRows + 1];
     }
+
     public void initialize() {
         fillWithSeats();
         assignPricesToSeats();
@@ -25,6 +30,7 @@ public class CinemaRoom {
             }
         }
     }
+
     private void fillWIthMarkerSeats() {
         for (int i = 0; i <= numberOfRows; i++) {
             movieHall[0][i] = new Seat(0, i);
@@ -47,7 +53,8 @@ public class CinemaRoom {
             System.out.println("");
         }
     }
-    public void getTotalIncome() {
+
+    public int getTotalIncome() {
         int totalIncome;
         if (numberOfRows * numberOfSeats <= 60) {
             totalIncome = numberOfRows * numberOfSeats * 10;
@@ -55,8 +62,15 @@ public class CinemaRoom {
             totalIncome = numberOfRows % 2 == 0 ? numberOfRows * numberOfSeats * 9
                     : (numberOfRows / 2 * numberOfSeats * 10) + ((numberOfRows / 2 + 1) * numberOfSeats * 8);
         }
-        System.out.printf("Total income:\n$%d\n", totalIncome);
+        return totalIncome;
     }
+    public int getCurrentIncome() {
+        return currentIncome;
+    }
+    public double numOfPurchasedTickets() {
+        return ((numOfPurchasedTickets * 1.0) / ((numberOfSeats) * (numberOfRows))) * 100;
+    }
+
     public void assignPricesToSeats() {
         if (numberOfRows * numberOfSeats <= 60) {
             for (int i = 1; i <= numberOfRows; i++) {
@@ -77,16 +91,36 @@ public class CinemaRoom {
             }
         }
     }
+
     public void buyTicket() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter a row number:");
-        int rowNumber = scanner.nextInt();
-        System.out.println("Enter a seat number in that row:");
-        int seatNumber = scanner.nextInt();
+        while (true) {
+            System.out.println("Enter a row number:");
+            int rowNumber = scanner.nextInt();
+            System.out.println("Enter a seat number in that row:");
+            int seatNumber = scanner.nextInt();
+            if (rowNumber < 1 || seatNumber < 1 || rowNumber > numberOfRows || seatNumber > numberOfSeats) {
+                System.out.println("Wrong input");
+                continue;
+            }
+            if (movieHall[seatNumber][rowNumber].getAvailable().equals("B")) {
+                System.out.println("That ticket has already been purchased!");
+                continue;
+            }
 
-        System.out.printf("Ticket price: $%d\n", movieHall[seatNumber][rowNumber].getPrice());
-        movieHall[seatNumber][rowNumber].setAvailable("B");
-        printRows();
+            System.out.printf("Ticket price: $%d\n", movieHall[seatNumber][rowNumber].getPrice());
+            currentIncome += movieHall[seatNumber][rowNumber].getPrice();
+            numOfPurchasedTickets++;
+            movieHall[seatNumber][rowNumber].setAvailable("B");
+            printRows();
+            return;
+        }
+    }
+    public void statistics() {
+        System.out.printf("Number of purchased tickets: %d\n",numOfPurchasedTickets);
+        System.out.printf("Percentage %.2f%%\n",numOfPurchasedTickets());
+        System.out.printf("Current income: $%d\n",currentIncome);
+        System.out.printf("Total income: $%d\n", getTotalIncome());
     }
 }
 
