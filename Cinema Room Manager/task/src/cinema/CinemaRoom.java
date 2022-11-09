@@ -5,9 +5,9 @@ import java.util.Scanner;
 
 public class CinemaRoom {
 
-    private int numberOfRows;
-    private int numberOfSeats;
-    public Seat[][] movieHall;
+    private final int numberOfRows;
+    private final int numberOfSeats;
+    private final Seat[][] movieHall;
     private int currentIncome = 0;
     private int numOfPurchasedTickets = 0;
 
@@ -64,9 +64,6 @@ public class CinemaRoom {
         }
         return totalIncome;
     }
-    public int getCurrentIncome() {
-        return currentIncome;
-    }
     public double numOfPurchasedTickets() {
         return ((numOfPurchasedTickets * 1.0) / ((numberOfSeats) * (numberOfRows))) * 100;
     }
@@ -99,14 +96,8 @@ public class CinemaRoom {
             int rowNumber = scanner.nextInt();
             System.out.println("Enter a seat number in that row:");
             int seatNumber = scanner.nextInt();
-            if (rowNumber < 1 || seatNumber < 1 || rowNumber > numberOfRows || seatNumber > numberOfSeats) {
-                System.out.println("Wrong input");
-                continue;
-            }
-            if (movieHall[seatNumber][rowNumber].getAvailable().equals("B")) {
-                System.out.println("That ticket has already been purchased!");
-                continue;
-            }
+
+            if (!validateInputForPurchase(rowNumber, seatNumber)) continue;
 
             System.out.printf("Ticket price: $%d\n", movieHall[seatNumber][rowNumber].getPrice());
             currentIncome += movieHall[seatNumber][rowNumber].getPrice();
@@ -116,11 +107,27 @@ public class CinemaRoom {
             return;
         }
     }
+
+    public boolean validateInputForPurchase(int rowNumber, int seatNumber) {
+        if (rowNumber < 1 || seatNumber < 1 || rowNumber > numberOfRows || seatNumber > numberOfSeats) {
+            System.out.println("Wrong input");
+            return false;
+        }
+        if (movieHall[seatNumber][rowNumber].getAvailable().equals("B")) {
+            System.out.println("That ticket has already been purchased!");
+            return false;
+        }
+        return true;
+    }
+
     public void statistics() {
         System.out.printf("Number of purchased tickets: %d\n",numOfPurchasedTickets);
         System.out.printf("Percentage %.2f%%\n",numOfPurchasedTickets());
         System.out.printf("Current income: $%d\n",currentIncome);
         System.out.printf("Total income: $%d\n", getTotalIncome());
+    }
+    public Seat[][] getSeats() {
+        return movieHall;
     }
 }
 
