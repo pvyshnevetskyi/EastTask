@@ -1,6 +1,5 @@
 package cinema;
 
-import javax.swing.text.html.ImageView;
 import java.util.Scanner;
 
 public class CinemaRoom {
@@ -99,13 +98,16 @@ public class CinemaRoom {
 
             if (!validateInputForPurchase(rowNumber, seatNumber)) continue;
 
-            System.out.printf("Ticket price: $%d\n", movieHall[seatNumber][rowNumber].getPrice());
-            currentIncome += movieHall[seatNumber][rowNumber].getPrice();
-            numOfPurchasedTickets++;
-            movieHall[seatNumber][rowNumber].setAvailable("B");
-            printRows();
+            makePurchase(rowNumber, seatNumber);
             return;
         }
+    }
+    public void makePurchase(int rowNumber, int seatNumber) {
+        System.out.printf("Ticket price: $%d\n", movieHall[seatNumber][rowNumber].getPrice());
+        currentIncome += movieHall[seatNumber][rowNumber].getPrice();
+        numOfPurchasedTickets++;
+        movieHall[seatNumber][rowNumber].setAvailable("B");
+        printRows();
     }
 
     public boolean validateInputForPurchase(int rowNumber, int seatNumber) {

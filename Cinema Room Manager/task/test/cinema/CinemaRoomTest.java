@@ -86,12 +86,21 @@ public class CinemaRoomTest {
 
     @Test
     public void buyTicket() {
+    InputStream sysInBackUp = System.in;
+    ByteArrayInputStream in = new ByteArrayInputStream("1 0 2 2".getBytes());
+    System.setIn(in);
+
+    cinemaRoom.initialize();
+    cinemaRoom.buyTicket();
+
+    assertEquals("B", cinemaRoom.getSeats()[2][2].getAvailable());
+
+    System.setIn(sysInBackUp);
+    }
+    @Test
+    public void makePurchase() {
         cinemaRoom.initialize();
-        InputStream backup = System.in;
-        String inputOne = "2";
-        String inputTwo = "2";
-        InputStream in = new ByteArrayInputStream(inputOne.getBytes());
-        System.setIn(in);
+        cinemaRoom.makePurchase(2, 2);
         assertEquals("B", cinemaRoom.getSeats()[2][2].getAvailable());
     }
 
